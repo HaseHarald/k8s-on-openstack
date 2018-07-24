@@ -3,8 +3,23 @@
     path: /etc/kubernetes/kubelet.conf
   register: kubelet_conf
 
+- name: set fact cluster-cidr for kubenet
+  set_fact:
+    cluster_cidr: '10.96.0.0/16'
+  when: kubelet_network == 'kubenet'
+
+- name: set fact cluster-cidr for calico
+  set_fact:
+    cluster_cidr: '192.168.0.0/16'
+  when: kubelet_network == 'calico'
+  
+- name: Generate kubeadm init config 
+  template:
+    src: files/kubeadm-config.yaml.j2
+    dest: /etc/kubernetes/kubeadm-config.yaml
+
 - name: kubeadm init
-  command: "kubeadm init --kubernetes-version v1.10.3 --apiserver-advertise-address {{ hostvars[groups.master[0]].ansible_ssh_host }}"
+  command: "kubeadm init --config /etc/kubernetes/kubeadm-config.yaml"
   args:
     creates: /etc/kubernetes/kubelet.conf
   when: kubelet_conf.stat.exists == False
@@ -23,9 +38,9 @@
     src: files/openstack-cloud-controller-manager-pod.yaml
 
 - name: Configure kube-controller-manager cloud provider integration
-  copy:
+  template:
     dest: /etc/kubernetes/manifests/kube-controller-manager.yaml
-    src: files/kube-controller-manager.yaml
+    src: files/kube-controller-manager.yaml.j2
 
 - name: Upload webook kubeconfig file
   copy:

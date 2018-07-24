@@ -1,0 +1,8 @@
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+kubernetesVersion: v1.10.3
+api:
+  advertiseAddress: {{ hostvars[groups.master[0]].ansible_ssh_host }}
+networking:
+  # This CIDR is a Calico default. Substitute or remove for your CNI provider.
+  podSubnet: "{{ cluster_cidr }}"

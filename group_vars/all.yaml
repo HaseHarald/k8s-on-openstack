@@ -23,3 +23,7 @@ nodes_flavor_ram: "{{ lookup('env','NODE_MEMORY') | default('4096', true) }}"
 nodes_flavor_name: "{{ lookup('env','NODE_FLAVOR') | default(false) }}"
 nodes_auto_ip: "{{ lookup('env', 'NODE_AUTO_IP') | default ('False', true) }}"
 nodes_delete_fip: "{{ lookup('env', 'NODE_DELETE_FIP') | default ('True', true) }}"
+
+kubelet_network: "{{ lookup('env', 'KUBELET_NETWORK') | default('kubenet', true) }}"
+
+calico_source: "{{ lookup('env', 'CALICO_SOURCE') | default('https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml', true) }}"

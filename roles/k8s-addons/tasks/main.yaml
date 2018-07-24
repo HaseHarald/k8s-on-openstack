@@ -6,6 +6,9 @@
     src: "{{ role_path }}/files/manifests/"
     dest: "/home/ubuntu/manifests/"
 
+- name: Install calico.yaml
+  shell: kubectl apply -f "{{ calico_source }}"
+  when: kubelet_network == 'calico'
 
 - name: Upload webook kubeconfig file
   template:

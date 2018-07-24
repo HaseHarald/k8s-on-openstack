@@ -59,9 +59,19 @@
     dest: /etc/kubernetes/cloud-config
     mode: 0600
 
+- name: set kubelet-network-args as fact for kubenet
+  set_fact:
+    kubelet_network_args: '--network-plugin=kubenet'
+  when: kubelet_network == 'kubenet'
+
+- name: set kubelet-network-args as fact for calico
+  set_fact:
+    kubelet_network_args: '--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin'
+  when: kubelet_network == 'calico'
+
 - name: Override default kubeadm configuration to use the OpenStack cloud configuration
-  copy:
-    src: files/10-kubeadm.conf
+  template:
+    src: files/10-kubeadm.conf.j2
     dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
     mode: 0600
   notify:
