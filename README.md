@@ -33,6 +33,8 @@ The following optional environment variables can also be set:
   * `MASTER_VOLUME_SIZE`: size of the master volume
   * `MASTER_MEMORY`: how many MB of memory should master have, defaults to 4 GB
   * `MASTER_FLAVOR`: allows to configure the exact OpenStack flavor name or ID to use for the master. When set, the `MASTER_MEMORY` setting is ignored.
+  * `KUBELET_NETWORK`: defines what kubelet network to use. Possible options currently are 'kubenet and 'calico'. Defaults to kubenet.
+  * `CALICO_SOURCE`: specifies the source of the calico deployment. Is ignored when `KUBELET_NETWORK` isn't set to 'calico' Defaults to https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml but can also be set to files in the manifests folder for example.
   
 Spin up a new cluster:
 
